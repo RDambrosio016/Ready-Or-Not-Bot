@@ -1,4 +1,5 @@
 var Plotly = require('plotly')("cavalier.archer", process.env.PLOTLYKEY)
+
 var fs = require('fs');
 const { Attachment, RichEmbed } = require('discord.js');
 let stats = {
@@ -9,10 +10,13 @@ let executed = false;
 module.exports = {
     name:"stats",
     description:"Displays stats about the faq",
+    category:"faq",
+    adminonly:false,
     execute(message, args, faqparsed) {
         //count how many entries in each category
         if(executed == false) {
         faqparsed.forEach(i => {
+            //prevents the numbers doubling on every iteration of the command
             if(stats.Numbers[i.category] === undefined) {
                 stats.Numbers[i.category] = 1
             } else {
@@ -32,8 +36,7 @@ module.exports = {
               y: Object.values(stats.Numbers),
               type: 'bar'
             }
-          ];
-          var fs = require('fs');          
+        ]        
           var figure = { 'data': data };
           var imgOpts = {
               format: 'png',
@@ -42,8 +45,10 @@ module.exports = {
           } 
           let sendablestats = '';
           stats.Categories.forEach((i, index) => {
+              //format the categories
             sendablestats += `\n${i}: **${Object.values(stats.Numbers)[index]} Entries** (${Math.round((Object.values(stats.Numbers)[index] / faqparsed.length) * 100)}%)\n`
           })  
+          //create an image stream and send the embed
           Plotly.getImage(figure, imgOpts, async function (error, imageStream) {
               if (error) return console.log (error);
                 const embed = new RichEmbed()

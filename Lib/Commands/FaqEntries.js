@@ -3,6 +3,9 @@ let categories = [];
 
 module.exports = {
     name:'faqentries',
+    description:'Lists all the FAQ entries by category or without category (paginated)',
+    category:"faq",
+    adminonly:false,
     execute(message, args, faqparsed) {
         
         faqparsed.forEach((i, index) => {

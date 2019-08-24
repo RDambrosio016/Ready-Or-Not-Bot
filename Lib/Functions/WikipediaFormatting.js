@@ -3,6 +3,13 @@ const fetch = require('node-fetch');
 const Discord = require('discord.js');
 const moment = require('moment');
 
+  /*
+  * deciphering wikitext is horrible
+  * this library fetches the page with a name and returns a json object, of which the structure is horrible
+  * The paragraphs are not in full text vars, they are in sections and sentences and must be concantenated, which make disambiguation pages horrible
+  * TODO: Fix Disambiguation pages
+  */
+  
 module.exports.formatting = (index, data, message) => {
   
   const url = data[3][index];
@@ -10,6 +17,7 @@ module.exports.formatting = (index, data, message) => {
   let input = data[1][index];
   input = input.replace(/[\s+]/g, '_');
   (async () => {;
+
     var doc = await wtf.fetch(input);
     let doc2 = doc.images();
 
@@ -35,14 +43,14 @@ module.exports.formatting = (index, data, message) => {
       image = doc2[0].url();
     }
     const embed = new Discord.RichEmbed()
-    .setAuthor('Entry for ' + input.replace(/[\_+]/g, ' '), 'https://imgur.com/ab2t4Kh.png')
-    .setTitle(data[1][index])
-    .setURL(url)
-    .setDescription(fulldescription)
-    .setThumbnail(image)
-    .setColor('WHITE')
-    .setFooter('Via wikipedia.com • Today at ' + moment().format('LTS'), 'https://imgur.com/yBUUNmd.png');
-    const filter = (reaction, user, member) => { //make a filter of only the reaction wastebasket made by the user
+      .setAuthor('Entry for ' + input.replace(/[\_+]/g, ' '), 'https://imgur.com/ab2t4Kh.png')
+      .setTitle(data[1][index])
+      .setURL(url)
+      .setDescription(fulldescription)
+      .setThumbnail(image)
+      .setColor('WHITE')
+      .setFooter('Via wikipedia.com • Today at ' + moment().format('LTS'), 'https://imgur.com/yBUUNmd.png');
+    const filter = (reaction, user) => { //make a filter of only the reaction wastebasket made by the user
       return ['🗑'].includes(reaction.emoji.name) && user.id === message.author.id;
     };
     message.channel.send(embed).then(m => {

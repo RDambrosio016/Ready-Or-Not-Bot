@@ -7,6 +7,8 @@ let index;
 module.exports = {
 	name: 'faq',
 	description: 'Grabs an entry from the faq with paging (PROTOTYPE)',
+	category:'faq',
+	adminonly:false,
 	execute(message, args, faqparsed) {
 
 		let allArgs = '';
@@ -20,16 +22,21 @@ module.exports = {
         i.Similarity = stringSimilarity.compareTwoStrings(s1, s2);
 		 };
 
+		let reactions = ["1⃣", "2⃣", "3⃣", "4⃣", "5⃣"];
+
+		//order results by relevancy
 		faqparsed.sort((a, b) => (a.Similarity < b.Similarity) ? 1 : ((b.Similarity < a.Similarity) ? -1 : 0));
+
+		if(faqparsed[0].Similarity * 100 >= 85) {
+			formatting.entryformat(message, faqparsed, 0)
+			return;
+		}
+		
 		const returned = formatting.faqformat(message, faqparsed);
-			message.channel.send(returned).then(m => {
-				m.react('🗑')
-					.then(() => m.react('1⃣'))
-						.then(() => m.react('2⃣'))
-							.then(() => m.react('3⃣'))
-								.then(() => m.react('4⃣'))
-									.then(() => m.react('5⃣'))
-				.catch(() => console.error('One of the emojis failed to react.'));
+			message.channel.send(returned).then(async m => {
+				for(i of reactions) {
+					await m.react(i);
+				}
 				const pagesFilter = (reaction, user) => user.id == message.author.id;
 	      const pages = new Discord.ReactionCollector(m, pagesFilter, {
 	        time: 60000,
@@ -41,36 +48,13 @@ module.exports = {
 						message.delete().catch(err => { console.log(err);});
 						return;
 					}
-					if(r.emoji.name == '1⃣') {
-						index = 0;
-						formatting.entryformat(message, faqparsed, index);
-						m.delete().catch(err => { console.log(err);});
-						return;
-					}
-					if(r.emoji.name == '2⃣') {
-						index = 1;
-						formatting.entryformat(message, faqparsed, index);
-						m.delete().catch(err => { console.log(err);});
-						return;
-					}
-					if(r.emoji.name == '3⃣') {
-						index = 2;
-						formatting.entryformat(message, faqparsed, index);
-						m.delete().catch(err => { console.log(err);});
-						return;
-					}
-					if(r.emoji.name == '4⃣') {
-						index = 3;
-						formatting.entryformat(message, faqparsed, index);
-						m.delete().catch(err => { console.log(err);});
-						return;
-					}
-					if(r.emoji.name == '5⃣') {
-						index = 4;
-						formatting.entryformat(message, faqparsed, index);
-						m.delete().catch(err => { console.log(err);});
-						return;
-					}
+					reactions.forEach((i, index) => {
+						if(r.emoji.name == i) {
+							formatting.entryformat(message, faqparsed, index)
+							m.delete().catch()
+							return;
+						}
+					})
 				});
 				pages.on('end', (collected, reason) => {
 					if(reason == 'time') {

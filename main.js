@@ -5,6 +5,15 @@ const client = new Discord.Client();
 const htmlparse = require('./Lib/Functions/HtmlParse.js');
 let prefix = '+', faqparsed = [];
 const wikipedia = require('./Lib/Commands/Wikipedia.js');
+const sqlite3 = require('sqlite3').verbose()
+require('./Lib/Database/Db.js')
+
+let db = new sqlite3.Database('Config', (err) => {
+  if (err) {
+    return console.error(err.message);
+  }
+  console.log('Connected to the DB');
+});
 
 client.once('ready', async () => {
   console.log('Bot running in the index file.');
@@ -27,20 +36,40 @@ for (const file of commandFiles) {
 
 client.on('message', async message => {
 
-  if (message.author.bot || !message.content.startsWith(prefix)) return;
+  if (message.author.bot || !message.content.startsWith('+')) return;
 
-  const args = message.content.slice(prefix.length).split(/ +/);
+  const args = message.content.slice(1).split(/ +/);
   const command = args.shift().toLowerCase();
 
   if (!client.commands.has(command)) return;
 
   try {
-  	client.commands.get(command).execute(message, args, faqparsed);
+
+    let toExecute = client.commands.get(command)
+
+    //check if the command is admin only, if it is then check for either admin perms or the bot management role
+    if(toExecute.adminonly) {
+      if(!message.member.hasPermission('ADMINISTRATOR') && !message.member.roles.has('552952275828604933')) return;
+    }
+
+    //check if the command is enabled
+      db.get(`SELECT Enabled FROM config WHERE Entry=(?)`, [toExecute.name], function(err, rows) {
+        if(rows.Enabled == 0) return; else toExecute.execute(message, args, faqparsed);
+      })
+
   } catch (error) {
   	console.error(error);
-  	message.reply('there was an error trying to execute that command');
+  	message.reply('there was an error trying to execute that command, please ping @SenorDickweed');
   }
 
 });
 
+//consoles have a tendency to cut off parts of the error, this is to prevent this
+
+client.on('error', err => {
+  console.log(err)
+})
+
 client.login(process.env.TOKEN);
+
+module.exports = client.commands

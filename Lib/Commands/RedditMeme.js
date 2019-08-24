@@ -3,6 +3,8 @@ const RedditEntry = require('../Classes/RedditEntry.js');
 module.exports = {
     name:"meme",
     description:"grabs a random meme from the sub",
+    category:'reddit',
+    adminonly:false,
     execute(message, args) {
         let entry = new RedditEntry()
         entry.Generate().then(() => {

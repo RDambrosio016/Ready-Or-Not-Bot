@@ -4,15 +4,25 @@ const search = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const w = require('../Functions/WikipediaFormatting.js');
+const sanitize = require('../Functions/Filter.js')
 
 module.exports = {
   name: 'wikipedia',
   description: 'returns a wikipedia article',
+  adminonly:false,
   execute(message, args, faqparsed) {
+
+    //filter for bad words
+    if(sanitize(message.content) == true) {
+      message.delete().catch();
+      return;
+    }
     var allArgs = '';
     for (let i = 0; i < args.length; i++) {
       allArgs += args[i].toLowerCase() + ' ';
     }
+
+    //sanitize input
     allArgs = allArgs.trim();
     allArgs = allArgs.replace(/[\s+]/g, '_');
     const searchurl = search + allArgs;
@@ -60,16 +70,12 @@ module.exports = {
           });
 
           pages.on('collect', r => {
-            if(r.emoji.name === listNumbers[-1]) {index = -1; w.formatting(index, data, message); msg.delete(); return;}
-            else if(r.emoji.name === listNumbers[0]) {index = 0; w.formatting(index, data, message); msg.delete(); return;}
-            else if(r.emoji.name === listNumbers[1]) {index = 1; w.formatting(index, data, message); msg.delete(); return;}
-            else if(r.emoji.name === listNumbers[2]) {index = 2; w.formatting(index, data, message); msg.delete(); return;}
-            else if(r.emoji.name === listNumbers[3]) {index = 3; w.formatting(index, data, message); msg.delete(); return;}
-            else if(r.emoji.name === listNumbers[4]) {index = 4; w.formatting(index, data, message); msg.delete(); return;}
-            else if(r.emoji.name === listNumbers[5]) {index = 5; w.formatting(index, data, message); msg.delete(); return;}
-            else if(r.emoji.name === listNumbers[6]) {index = 6; w.formatting(index, data, message); msg.delete(); return;}
-            else if(r.emoji.name === listNumbers[7]) {index = 7; w.formatting(index, data, message); msg.delete(); return;}
-            else if(r.emoji.name === listNumbers[8]) {index = 8; w.formatting(index, data, message); msg.delete(); return;}
+            listNumbers.forEach((i, index) => {
+              if(r.emoji.name === i) {
+                w.formatting(parseInt(index), data, message)
+                message.delete().catch();
+              }
+            })
           });
           pages.on('end', (collected, reason) => {
             if(reason == 'time') {
