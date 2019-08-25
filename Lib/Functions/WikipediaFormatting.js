@@ -35,7 +35,7 @@ module.exports.formatting = (index, data, message) => {
     }
     let fulldescription = (paragraph2 !== '' ? description + '\n\n' + paragraph2: description)
  
-    if(fulldescription.length > 1500) fulldescription = fulldescription.substring(1500);
+    if(fulldescription.length > 1500) fulldescription = fulldescription.substring(0, 1500);
     fulldescription = fulldescription + '...';
 
     let image = '';

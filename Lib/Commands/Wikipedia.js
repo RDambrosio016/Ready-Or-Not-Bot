@@ -42,7 +42,6 @@ module.exports = {
        }
        let index = 0;
        let listNumbers = ["1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣"];
-        let usedListNumbers = [];
         let articleListText = "";
         if(data[1].length == 1) {index = 0; w.formatting(index, data, message); return; }
         if(data[1].length === 10) data[1].length = data[1].length - 1;
