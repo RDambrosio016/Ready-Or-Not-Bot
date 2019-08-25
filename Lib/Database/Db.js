@@ -47,7 +47,6 @@ function init() {
           }
         })
       })
-      db.close()
   })
 }
 init()

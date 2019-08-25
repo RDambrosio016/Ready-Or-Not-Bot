@@ -1,8 +1,0 @@
-{
-    "prefix":"+",
-    "faqparsed":[],
-    "commands": [
-        "**+faq** <faq entry> - Grabs an faq entry from the RON faq",
-        "**+wikipedia** <wikipedia entry> - Grabs a wikipedia article (wait for reactions to complete before choosing)"
-    ]    
-}

@@ -9,6 +9,8 @@ const sanitize = require('../Functions/Filter.js')
 module.exports = {
   name: 'wikipedia',
   description: 'returns a wikipedia article',
+  category:'Misc',
+  params:'[Query]',
   adminonly:false,
   execute(message, args, faqparsed) {
 

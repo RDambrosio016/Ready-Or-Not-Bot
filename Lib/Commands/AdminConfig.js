@@ -21,7 +21,8 @@ let index = 0;
 module.exports = {
     name:'adminconfig',
     description:'Brings up a menu to disable and enable commands',
-    category:'admin',
+    params:'none',
+    category:'Admin',
     adminonly:true,
     async execute(message) {
         db.all(`SELECT * FROM config`, async function(err, rows) {
@@ -45,7 +46,7 @@ module.exports = {
             .setAuthor(message.author.tag, message.author.displayAvatarURL)
             .setDescription(getDescription(rows))
             .setColor('RED')
-            .setFooter('Use the reactions to enable to disable commands')
+            .setFooter('Use the reactions to enable or disable commands')
           const m = await message.channel.send(embed)
 
           for(let i = 0; i < rows.length; i++) {

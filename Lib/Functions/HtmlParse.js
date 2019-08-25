@@ -14,7 +14,7 @@ module.exports.faqparse = async () => {
           faqparsed.push({ "title":$(element).text(), "entry":$(element).next().text(), "category":category});
       });
     faqparsed = faqparsed.filter(i => i.title.replace(/\W/g, '') !== ''); //filter out any whitespace entries
-    console.log('Data loaded');
+    console.log('FAQ Data loaded');
     return faqparsed;
 };
 

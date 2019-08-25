@@ -7,6 +7,7 @@ let prefix = '+', faqparsed = [];
 const wikipedia = require('./Lib/Commands/Wikipedia.js');
 const sqlite3 = require('sqlite3').verbose()
 require('./Lib/Database/Db.js')
+const start = require('./Lib/Features/Twitter.js')
 
 let db = new sqlite3.Database('Config', (err) => {
   if (err) {
@@ -18,12 +19,14 @@ let db = new sqlite3.Database('Config', (err) => {
 client.once('ready', async () => {
   console.log('Bot running in the index file.');
    faqparsed = await htmlparse.faqparse(); //load faq data
+   start(client);
    client.user.setPresence({
     game: {
       name: 'Ready or noot',
       type: 'PLAYING',
     },
   });
+  module.exports = client
 });
 
 
@@ -72,4 +75,3 @@ client.on('error', err => {
 
 client.login(process.env.TOKEN);
 
-module.exports = client.commands

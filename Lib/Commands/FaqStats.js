@@ -10,7 +10,8 @@ let executed = false;
 module.exports = {
     name:"stats",
     description:"Displays stats about the faq",
-    category:"faq",
+    params:'none',
+    category:"Faq",
     adminonly:false,
     execute(message, args, faqparsed) {
         //count how many entries in each category

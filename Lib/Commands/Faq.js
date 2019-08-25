@@ -6,8 +6,9 @@ let index;
 
 module.exports = {
 	name: 'faq',
-	description: 'Grabs an entry from the faq with paging (PROTOTYPE)',
-	category:'faq',
+	description: 'Grabs an entry from the FAQ',
+	params: '[Query]',
+	category:'Faq',
 	adminonly:false,
 	execute(message, args, faqparsed) {
 
@@ -17,10 +18,10 @@ module.exports = {
 	   }
 
 		for (i of faqparsed) {
-	  s1 = allArgs.replace(/[^\w]/g, '').toLowerCase();
-      s2 = i.title.replace(/[^\w]/g, '').toLowerCase();
-        i.Similarity = stringSimilarity.compareTwoStrings(s1, s2);
-		 };
+			s1 = allArgs.replace(/[^\w]/g, '').toLowerCase();
+			s2 = i.title.replace(/[^\w]/g, '').toLowerCase();
+			i.Similarity = stringSimilarity.compareTwoStrings(s1, s2);
+		};
 
 		let reactions = ["1⃣", "2⃣", "3⃣", "4⃣", "5⃣"];
 
@@ -31,7 +32,7 @@ module.exports = {
 			formatting.entryformat(message, faqparsed, 0)
 			return;
 		}
-		
+
 		const returned = formatting.faqformat(message, faqparsed);
 			message.channel.send(returned).then(async m => {
 				for(i of reactions) {
