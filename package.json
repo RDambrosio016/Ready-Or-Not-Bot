@@ -21,7 +21,7 @@
     "discord.js": "^11.5.1",
     "dotenv": "^8.0.0",
     "firstline": "^2.0.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "plotly": "^1.0.6",
